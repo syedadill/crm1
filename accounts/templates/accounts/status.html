@@ -1,0 +1,274 @@
+<br />
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="col-md">
+        <div class="card text-center text-white mb-3" id="total-orders">
+          <div class="card-header">
+            <h5 class="card-title">To Do {{todo}}</h5>
+          </div>
+          
+          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+            <p class="card-title">
+              <div class="container">
+              {% for j in task %}
+              {% if j.SelectStatus == 'ToDo' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mb-1"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                {{ j.TaskName }}
+              </button>
+              
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="color: red">
+        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
+        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
+        <p><strong>Type:</strong> {{ j.TaskType }}</p>
+        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
+        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
+        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
+        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endif%}
+              {% endfor %}  
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  
+    <div class="col">
+      <div class="col-md">
+        <div class="card text-center text-white mb-3" id="orders-delivered">
+          <div class="card-header">
+            <h5 class="card-title">In Progress {{inprogress}}</h5>
+          </div>
+          
+          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+            <p class="card-title">
+              <div class="container">
+              {% for j in task %}
+              {% if j.SelectStatus == 'In Progress' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                {{ j.TaskName }}
+              </button>
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="color: red">
+        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
+        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
+        <p><strong>Type:</strong> {{ j.TaskType }}</p>
+        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
+        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
+        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
+        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endif%}
+              {% endfor %}  
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+            
+     
+
+
+
+    <div class="col">
+      <div class="col-md">
+        <div class="card text-center text-white mb-3" id="orders-pending">
+          <div class="card-header">
+            <h5 class="card-title">Testing {{testing}}</h5>
+          </div>
+          
+          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+            <p class="card-title">
+              <div class="container">
+              {% for j in task %}
+              {% if j.SelectStatus == 'Testing' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                {{ j.TaskName }} 
+                
+              </button>
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="color: red">
+        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
+        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
+        <p><strong>Type:</strong> {{ j.TaskType }}</p>
+        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
+        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
+        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
+        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endif%}
+              {% endfor %}  
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col">
+      <div class="col-md">
+        <div class="card text-center text-white mb-3" id="Bug">
+          <div class="card-header">
+            <h5 class="card-title">Bug {{bug}}</h5>
+          </div>
+          
+          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+            <p class="card-title">
+              <div class="container">
+              {% for j in task %}
+              {% if j.SelectStatus == 'Bug' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                {{ j.TaskName }}
+              </button>
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="color: red">
+        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
+        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
+        <p><strong>Type:</strong> {{ j.TaskType }}</p>
+        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
+        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
+        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
+        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endif%}
+              {% endfor %}  
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="col-md">
+        <div class="card text-center text-white mb-3" id="Completed">
+          <div class="card-header">
+            <h5 class="card-title">Completed {{completed}}</h5>
+          </div>
+          
+          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+            <p class="card-title">
+              <div class="container">
+              {% for j in task %}
+              {% if j.SelectStatus == 'Completed' %}
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                {{ j.TaskName }}
+              </button>
+
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="color: red">
+        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
+        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
+        <p><strong>Type:</strong> {{ j.TaskType }}</p>
+        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
+        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
+        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
+        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+              {% endif%}
+              {% endfor %}  
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row"></div>
+</div>
+

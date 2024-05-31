@@ -1,0 +1,69 @@
+
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+
+{%  include 'accounts/status.html' %}
+
+
+<div class= "container-fluid mt-3">
+<div class="row">
+	<div class="col-md-5">
+		<h5>Projects:</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="">Create Project</a>
+			<table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>Project</th>
+					<th>Type</th>
+				</tr>
+				{% for pro in project%}	
+					<tr>
+						<td><a class="btn btn btn-sm btn-info" href="{% url 'projects' pro.id %}">View</a></td>
+						<td>{{pro.ProjectName}}</td>
+						<td>{{pro.ProjectType}}		
+					</tr>
+						
+				{% endfor%}
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h5>Assigned Tasks</h5>
+		<hr>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_task' %}">Create Task</a>
+			<table class="table table-sm">
+				<tr>
+				
+					<th>Task</th>
+					<th>Assigned</th>
+					<th>Date</th>
+					<th>Due Date</th>
+					<th>Status</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+				{% for tsk in task %}	
+					<tr>
+						
+						<td>{{tsk.TaskName}}</td>
+						<td>{{tsk.TaskAssignTo}}</td>
+						<td>{{tsk.Date}}</td>
+						<td>{{tsk.DueDate}}</td>
+						<td>{{tsk.SelectStatus}}</td>
+						<td><a class="btn btn btn-sm btn-info" href="{% url 'update_task' tsk.id %}">Update</a></td>
+						<td><a class="btn btn btn-sm btn-danger" href="">Delete</a></td>		
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+
+</div>
+</div>
+
+{% endblock %}

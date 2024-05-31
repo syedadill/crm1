@@ -1,0 +1,34 @@
+{% extends "accounts/main.html" %}
+
+{% block content %}
+<br>
+
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+            <h5>Task</h5>
+        </div>
+        <div class="card card-body">
+            <table class="table">
+                <tr>
+                    <th>Project</th>
+                    <th>Stack</th>
+                    <th>Team</th>
+                </tr>
+
+                {% for i in tasklist %}
+                    <tr>
+                        <td>{{i.TaskName}}</td>
+                        <td>{{i.tags}}</td>
+                        <td>{{i.TaskAssignTo}}</td>
+                    </tr>
+                    
+                {% endfor%}
+                
+            </table>
+        </div>
+    </div>
+    
+</div>
+{% endblock content %}
+
