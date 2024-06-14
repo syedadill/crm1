@@ -1,3 +1,15 @@
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script src="https://cdn.tiny.cloud/1/7wu2viz1ph3twvpgovzhsptq1pp7z86335wwtgil5zyro9hf/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<style>
+  .attach-image
+  {
+      max-width: 100px;
+      max-height: 100px;
+      margin: 0 auto;
+      
+  }
+</style>
 <br />
 
 <div class="container-fluid">
@@ -9,50 +21,140 @@
             <h5 class="card-title">To Do {{todo}}</h5>
           </div>
           
-          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+          <div class="card-body" style="max-height: 250px; overflow-y: auto; ">
             <p class="card-title">
-              <div class="container">
+              <div class="container-fluid">
+                    
+              
               {% for j in task %}
               {% if j.SelectStatus == 'ToDo' %}
+                  
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary mb-1"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
-                {{ j.TaskName }}
-              </button>
               
-<!-- Modal -->
-<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="color: red">
-        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
-        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
-        <p><strong>Type:</strong> {{ j.TaskType }}</p>
-        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
-        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
-        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
-        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
-              {% endif%}
-              {% endfor %}  
+              <div class="btn bg-dark text-white"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                <b>{{ j.TaskName }}</b><br><div class="btn-sm bg-secondary text-white">{{j.DueDate}}</div><a data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}"></a>
+              </div> 
+              <hr>
+                
+
+              <div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 800px; max-height: 100px;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" style="color: black;" id="taskModalLabel{{ j.id }}">&nbsp;&nbsp;&nbsp; <b>{{ j.TaskName }} | {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</h3></b>
+                      
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div  class="modal-body" style="color: black">
+              
+                      <section class="container">
+              
+                        <div class="row">
+              
+                          <div class="col-sm-8 " style="text-align: left;">
+                            <p><strong>Description:</strong> 
+                              <br>
+                              <br>
+                              {{ j.TaskDescription | safe }}</p> <br><br> <hr>
+                              
+                              <h5 style="color: black;">Comments:</h5>
+                              <div id="comments">
+                                 
+                                      <div class="comment" style="color: black;" >
+                                        {% for comment in request.user.customers.tasks_set.all  %}
+                                       
+                                        <table>
+                                          <th>
+                                          <p>{{ comment.Comments }}</p>
+                                          </th>
+                                        </table>
+                                        {% endfor %}   
+                                      </div>
+                                      <form action="{% url 'update_status' j.id %}" method="POST">
+                                        {% csrf_token %}
+                                      <p>Add Comment {{form.Comments}}</p>
+                                
+                              </div> 
+                              
+                          </div>
+              
+                          <div class="col-sm-4">
+                            <br>
+                            <br>
+                           <div class="btn btn-danger">{{ j.DueDate }}</div> 
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.TaskType }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.employe }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.project.ProjectName }}</div>
+                            <br>
+                            <br>
+                             
+                                      
+                              <p><strong>Change Status</strong>  {{ form.SelectStatus }}</p>
+                              <p><strong>Assign</strong>  {{ form.employe }}</p>
+                              
+                              <div class="mb-3">
+                                {% if j.Image %}
+                                <img  class = "attach-image" src="{{ j.Image.url }}" alt="Image"><hr>
+                              {% else %}
+                                <p>No image available.</p>
+                              {% endif %}
+                      
+                              {% if j.files %}
+                                <a class="btn btn-primary" href="{{ j.files.url }}">Check for attached files</a>
+                              {% else %}
+                                <p>No file attached.</p>
+                              {% endif %}
+                              </div>
+                              <input class="btn btn-dark" type="submit" name="Submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+              
+                        </div>
+                        
+                      </section>
+                      <hr>
+                        
+                        
+                        <!-- Add comment form -->
+                        
+                        </div>
+
+                      
+                                            
+                      
+              
+                     
+              
+                  
+              
+                      <div class="modal-footer">
+                      
+                      
+                          
+                    
+                  </div>
+                </div>
               </div>
+                      {% endif %}
+                      {% endfor %} 
+
+                      
+                                  </div>
             </p>
           </div>
         </div>
       </div>
     </div>
 
+
+    
 
   
     <div class="col">
@@ -62,44 +164,128 @@
             <h5 class="card-title">In Progress {{inprogress}}</h5>
           </div>
           
-          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+          <div class="card-body" style="max-height: 250px; overflow-y: auto; ">
             <p class="card-title">
               <div class="container">
               {% for j in task %}
               {% if j.SelectStatus == 'In Progress' %}
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
-                {{ j.TaskName }}
-              </button>
+             
+               
+              <div class="btn bg-dark text-white"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                <b>{{ j.TaskName }}</b><br><div class="btn-sm bg-secondary text-white">{{j.DueDate}}</div><a data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}"></a>
+              </div> 
+              <hr>
+                
 
-<!-- Modal -->
-<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="color: red">
-        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
-        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
-        <p><strong>Type:</strong> {{ j.TaskType }}</p>
-        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
-        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
-        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
-        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
-              {% endif%}
-              {% endfor %}  
+              <div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 800px; max-height: 100px;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" style="color: black;" id="taskModalLabel{{ j.id }}">&nbsp;&nbsp;&nbsp; <b>{{ j.TaskName }} | {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</h3></b>
+                      
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div  class="modal-body" style="color: black">
+              
+                      <section class="container">
+              
+                        <div class="row">
+              
+                          <div class="col-sm-8 " style="text-align: left;">
+                            <p><strong>Description:</strong> 
+                              <br>
+                              <br>
+                              {{ j.TaskDescription | safe }}</p> <br><br> <hr>
+                              
+                              <h5 style="color: black;">Comments:</h5>
+                              <div id="comments">
+                                 
+                                      <div class="comment" style="color: black;" >
+                                        {% for comment in request.user.customers.tasks_set.all  %}
+                                       
+                                        <table>
+                                          <th>
+                                          <p>{{ comment.Comments }}</p>
+                                          </th>
+                                        </table>
+                                        {% endfor %}   
+                                      </div>
+                                      <form action="{% url 'update_status' j.id %}" method="POST">
+                                        {% csrf_token %}
+                                      <p>Add Comment {{form.Comments}}</p>
+                                
+                              </div>
+                              
+                          </div>
+              
+                          <div class="col-sm-4">
+                            <br>
+                            <br>
+                           <div class="btn btn-danger">{{ j.DueDate }}</div> 
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.TaskType }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.employe }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.project.ProjectName }}</div>
+                            <br>
+                            <br>
+                             
+                                      
+                              <p><strong>Change Status</strong>  {{ form.SelectStatus }}</p>
+                              <p><strong>Assign</strong>  {{ form.employe }}</p>
+                              
+                              <div class="mb-3">
+                                {% if j.Image %}
+                                <img  class = "attach-image" src="{{ j.Image.url }}" alt="Image"><hr>
+                              {% else %}
+                                <p>No image available.</p>
+                              {% endif %}
+                      
+                              {% if j.files %}
+                                <a class="btn btn-primary" href="{{ j.files.url }}">Check for attached files</a>
+                              {% else %}
+                                <p>No file attached.</p>
+                              {% endif %}
+                              </div>
+                              <input class="btn btn-dark" type="submit" name="Submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+              
+                        </div>
+                        
+                      </section>
+                      <hr>
+                        
+                        
+                        <!-- Add comment form -->
+                        
+                        </div>
+
+                      
+                                            
+                      
+              
+                     
+              
+                  
+              
+                      <div class="modal-footer">
+                      
+                      
+                          
+                    
+                  </div>
+                </div>
               </div>
+                      {% endif %}
+                      {% endfor %} 
+                     
+                                  </div>
             </p>
           </div>
         </div>
@@ -118,45 +304,129 @@
             <h5 class="card-title">Testing {{testing}}</h5>
           </div>
           
-          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+          <div class="card-body" style="max-height: 250px; overflow-y: auto; ">
             <p class="card-title">
               <div class="container">
               {% for j in task %}
               {% if j.SelectStatus == 'Testing' %}
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
-                {{ j.TaskName }} 
+               
+              <div class="btn bg-dark text-white"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                <b>{{ j.TaskName }}</b><br><div class="btn-sm bg-secondary text-white">{{j.DueDate}}</div><a data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}"></a>
+              </div> 
+              <hr>
                 
-              </button>
 
-<!-- Modal -->
-<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="color: red">
-        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
-        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
-        <p><strong>Type:</strong> {{ j.TaskType }}</p>
-        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
-        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
-        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
-        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div> 
-              {% endif%}
-              {% endfor %}  
+              <div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 800px; max-height: 100px;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" style="color: black;" id="taskModalLabel{{ j.id }}">&nbsp;&nbsp;&nbsp; <b>{{ j.TaskName }} | {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</h3></b>
+                      
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div  class="modal-body" style="color: black">
+              
+                      <section class="container">
+              
+                        <div class="row">
+              
+                          <div class="col-sm-8 " style="text-align: left;">
+                            <p><strong>Description:</strong> 
+                              <br>
+                              <br>
+                              {{ j.TaskDescription | safe }}</p> <br><br> <hr>
+                              
+                              <h5 style="color: black;">Comments:</h5>
+                              <div id="comments">
+                                 
+                                      <div class="comment" style="color: black;" >
+                                        {% for comment in request.user.customers.tasks_set.all  %}
+                                       
+                                        <table>
+                                          <th>
+                                          <p>{{ comment.Comments }}</p>
+                                          </th>
+                                        </table>
+                                        {% endfor %}   
+                                      </div>
+                                      <form action="{% url 'update_status' j.id %}" method="POST">
+                                        {% csrf_token %}
+                                      <p>Add Comment {{form.Comments}}</p>
+                                
+                              </div>
+                              
+                          </div>
+              
+                          <div class="col-sm-4">
+                            <br>
+                            <br>
+                           <div class="btn btn-danger">{{ j.DueDate }}</div> 
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.TaskType }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.employe }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.project.ProjectName }}</div>
+                            <br>
+                            <br>
+                             
+                                      
+                              <p><strong>Change Status</strong>  {{ form.SelectStatus }}</p>
+                              <p><strong>Assign</strong>  {{ form.employe }}</p>
+                              
+                              <div class="mb-3">
+                                {% if j.Image %}
+                                <img  class = "attach-image" src="{{ j.Image.url }}" alt="Image"><hr>
+                              {% else %}
+                                <p>No image available.</p>
+                              {% endif %}
+                      
+                              {% if j.files %}
+                                <a class="btn btn-primary" href="{{ j.files.url }}">Check for attached files</a>
+                              {% else %}
+                                <p>No file attached.</p>
+                              {% endif %}
+                              </div>
+                              <input class="btn btn-dark" type="submit" name="Submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+              
+                        </div>
+                        
+                      </section>
+                      <hr>
+                        
+                        
+                        <!-- Add comment form -->
+                        
+                        </div>
+
+                      
+                                            
+                      
+              
+                     
+              
+                  
+              
+                      <div class="modal-footer">
+                      
+                      
+                          
+                    
+                  </div>
+                </div>
               </div>
+                      {% endif %}
+                      {% endfor %} 
+
+                     
+                                  </div>
             </p>
           </div>
         </div>
@@ -171,43 +441,127 @@
             <h5 class="card-title">Bug {{bug}}</h5>
           </div>
           
-          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+          <div class="card-body" style="max-height: 250px; overflow-y: auto; ">
             <p class="card-title">
               <div class="container">
               {% for j in task %}
               {% if j.SelectStatus == 'Bug' %}
-              <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
-                {{ j.TaskName }}
-              </button>
+ 
+              <div class="btn bg-dark text-white"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                <b>{{ j.TaskName }}</b><br><div class="btn-sm bg-secondary text-white">{{j.DueDate}}</div><a data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}"></a>
+              </div> 
+              <hr>
+                
 
-<!-- Modal -->
-<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="color: red">
-        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
-        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
-        <p><strong>Type:</strong> {{ j.TaskType }}</p>
-        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
-        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
-        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
-        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
-              {% endif%}
-              {% endfor %}  
+              <div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 800px; max-height: 100px;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" style="color: black;" id="taskModalLabel{{ j.id }}">&nbsp;&nbsp;&nbsp; <b>{{ j.TaskName }} | {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</h3></b>
+                      
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div  class="modal-body" style="color: black">
+              
+                      <section class="container">
+              
+                        <div class="row">
+              
+                          <div class="col-sm-8 " style="text-align: left;">
+                            <p><strong>Description:</strong> 
+                              <br>
+                              <br>
+                              {{ j.TaskDescription | safe }}</p> <br><br> <hr>
+                              
+                              <h5 style="color: black;">Comments:</h5>
+                              <div id="comments">
+                                 
+                                      <div class="comment" style="color: black;" >
+                                        {% for comment in request.user.customers.tasks_set.all  %}
+                                       
+                                        <table>
+                                          <th>
+                                          <p>{{ comment.Comments }}</p>
+                                          </th>
+                                        </table>
+                                        {% endfor %}   
+                                      </div>
+                                      <form action="{% url 'update_status' j.id %}" method="POST">
+                                        {% csrf_token %}
+                                      <p>Add Comment {{form.Comments}}</p>
+                                
+                              </div>
+                              
+                          </div>
+              
+                          <div class="col-sm-4">
+                            <br>
+                            <br>
+                           <div class="btn btn-danger">{{ j.DueDate }}</div> 
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.TaskType }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.employe }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.project.ProjectName }}</div>
+                            <br>
+                            <br>
+                             
+                                      
+                              <p><strong>Change Status</strong>  {{ form.SelectStatus }}</p>
+                              <p><strong>Assign</strong>  {{ form.employe }}</p>
+                              
+                              <div class="mb-3">
+                                {% if j.Image %}
+                                <img  class = "attach-image" src="{{ j.Image.url }}" alt="Image"><hr>
+                              {% else %}
+                                <p>No image available.</p>
+                              {% endif %}
+                      
+                              {% if j.files %}
+                                <a class="btn btn-primary" href="{{ j.files.url }}">Check for attached files</a>
+                              {% else %}
+                                <p>No file attached.</p>
+                              {% endif %}
+                              </div>
+                              <input class="btn btn-dark" type="submit" name="Submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+              
+                        </div>
+                        
+                      </section>
+                      <hr>
+                        
+                        
+                        <!-- Add comment form -->
+                        
+                        </div>
+
+                      
+                                            
+                      
+              
+                     
+              
+                  
+              
+                      <div class="modal-footer">
+                      
+                      
+                          
+                    
+                  </div>
+                </div>
+              </div>
+                      {% endif %}
+                      {% endfor %} 
+                     
+                    
               </div>
             </p>
           </div>
@@ -222,43 +576,127 @@
             <h5 class="card-title">Completed {{completed}}</h5>
           </div>
           
-          <div class="card-body" style="max-height: 100px; overflow-y: auto; ">
+          <div class="card-body" style="max-height: 250px; overflow-y: auto; ">
             <p class="card-title">
               <div class="container">
               {% for j in task %}
               {% if j.SelectStatus == 'Completed' %}
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
-                {{ j.TaskName }}
-              </button>
+               
+              <div class="btn bg-dark text-white"  data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}">
+                <b>{{ j.TaskName }}</b><br><div class="btn-sm bg-secondary text-white">{{j.DueDate}}</div><a data-bs-toggle="modal" data-bs-target="#taskModal{{ j.id }}"></a>
+              </div> 
+              <hr>
+                
+              
+              <div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
+                <div class="modal-dialog" style="max-width: 800px; max-height: 100px;">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h3 class="modal-title" style="color: black;" id="taskModalLabel{{ j.id }}">&nbsp;&nbsp;&nbsp; <b>{{ j.TaskName }} | {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</h3></b>
+                      
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div  class="modal-body" style="color: black">
+              
+                      <section class="container">
+              
+                        <div class="row">
+              
+                          <div class="col-sm-8 " style="text-align: left;">
+                            <p><strong>Description:</strong> 
+                              <br>
+                              <br>
+                              {{ j.TaskDescription | safe }}</p> <br><br> <hr>
+                              
+                              <h5 style="color: black;">Comments:</h5>
+                              <div id="comments">
+                                 
+                                      <div class="comment" style="color: black;" >
+                                        {% for comment in request.user.customers.tasks_set.all  %}
+                                       
+                                        <table>
+                                          <th>
+                                          <p>{{ comment.Comments }}</p>
+                                          </th>
+                                        </table>
+                                        {% endfor %}   
+                                      </div>
+                                      <form action="{% url 'update_status' j.id %}" method="POST">
+                                        {% csrf_token %}
+                                      <p>Add Comment {{form.Comments}}</p>
+                                
+                              </div> 
+                              
+                          </div>
+              
+                          <div class="col-sm-4">
+                            <br>
+                            <br>
+                           <div class="btn btn-danger">{{ j.DueDate }}</div> 
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.TaskType }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.employe }}</div>
+                            <br>
+                            <br>
+                            <div class="btn btn-secondary">{{ j.project.ProjectName }}</div>
+                            <br>
+                            <br>
+                             
+                                      
+                              <p><strong>Change Status</strong>  {{ form.SelectStatus }}</p>
+                              <p><strong>Assign</strong>  {{ form.employe }}</p>
+                              
+                              <div class="mb-3">
+                                {% if j.Image %}
+                                <img  class = "attach-image" src="{{ j.Image.url }}" alt="Image"><hr>
+                              {% else %}
+                                <p>No image available.</p>
+                              {% endif %}
+                      
+                              {% if j.files %}
+                                <a class="btn btn-primary" href="{{ j.files.url }}">Check for attached files</a>
+                              {% else %}
+                                <p>No file attached.</p>
+                              {% endif %}
+                              </div>
+                              <input class="btn btn-dark" type="submit" name="Submit" value="Update">
+                              </form>
+                            </div>
+                          </div>
+              
+                        </div>
+                        
+                      </section>
+                      <hr>
+                        
+                        
+                        <!-- Add comment form -->
+                        
+                        </div>
 
-<!-- Modal -->
-<div class="modal fade" id="taskModal{{ j.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ j.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="taskModalLabel{{ j.id }}">Task Details: {{ j.TaskName }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" style="color: red">
-        <p><strong>Task Name:</strong> {{ j.TaskName }}</p> 
-        <p><strong>Description:</strong> {{ j.TaskDescription }}</p>
-        <p><strong>Type:</strong> {{ j.TaskType }}</p>
-        <p><strong>Assignee:</strong> {{ j.TaskAssignTo }}</p>
-        <p><strong>Status:</strong> {{ j.SelectStatus }}</p>
-        <p><strong>Due Date:</strong> {{ j.DueDate }}</p>
-        <p><strong>Tags:</strong> {% for tag in j.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-        <p><strong>Project:</strong> {{ j.project.ProjectName }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
-              {% endif%}
-              {% endfor %}  
+                      
+                                            
+                      
+              
+                     
+              
+                  
+              
+                      <div class="modal-footer">
+                      
+                      
+                          
+                    
+                  </div>
+                </div>
+              </div>
+                      {% endif %}
+                      {% endfor %} 
+        
               </div>
             </p>
           </div>
@@ -271,4 +709,5 @@
 <div class="container-fluid">
   <div class="row"></div>
 </div>
+
 

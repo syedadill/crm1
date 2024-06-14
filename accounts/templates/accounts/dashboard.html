@@ -4,26 +4,25 @@
 {% block content %}
 
 {%  include 'accounts/status.html' %}
-
-
 <div class= "container-fluid mt-3">
 <div class="row">
-	<div class="col-md-5">
-		<h5>Projects:</h5>
+	<div class="col-md-5 text-white " style="text-shadow: ;"  >
+		<h3>Projects:</h3>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary  btn-sm btn-block" href="">Create Project</a>
+			<a class="btn bg-dark text-white" href="{% url 'create_project' %}">Create Project</a>
 			<table class="table table-sm">
 				<tr>
-					<th></th>
-					<th>Project</th>
+					
+					<th><h5>Projects</h5></th>
 					<th>Type</th>
+					<th></th>
 				</tr>
 				{% for pro in project%}	
 					<tr>
-						<td><a class="btn btn btn-sm btn-info" href="{% url 'projects' pro.id %}">View</a></td>
-						<td>{{pro.ProjectName}}</td>
-						<td>{{pro.ProjectType}}		
+						<td><a class="btn btn btn-secondary" href="{% url 'projects' pro.id %}">{{pro.ProjectName}}<a></td>
+						<td>{{pro.ProjectType}}</td>
+						<td><td><a class="btn btn btn-sm btn-warning" href="{% url 'update_project' pro.id %}">Update</a></td></td>	
 					</tr>
 						
 				{% endfor%}
@@ -31,11 +30,36 @@
 		</div>
 	</div>
 
+	<div class= "container-fluid mt-3">
+		<div class="row">
+			<div class="col-md-5">
+				<h5>Employees</h5>
+				<hr>
+				<div class="card card-body">
+					<a class="btn bg-dark text-white" href="">Employees</a>
+					<table class="table table-sm">
+						<tr>
+							<th>Tasks</th>
+							<th>Employee Name</th>
+							<th>Email</th>
+						</tr>
+						{% for pro in employee%}	
+							<tr>
+								<td><a class="btn btn btn-sm btn-secondary" href="{% url 'employee' pro.id %}">View</a></td>
+								<td>{{pro.EmployeeName}}</td>
+								<td>{{pro.Email}}		
+							</tr>
+								
+						{% endfor%}
+					</table>
+				</div>
+			</div>
+		
 	<div class="col-md-7">
 		<h5>Assigned Tasks</h5>
 		<hr>
 		<div class="card card-body">
-			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'create_task' %}">Create Task</a>
+			<a class="bg-dark text-white" href="">All Tasks</a>
 			<table class="table table-sm">
 				<tr>
 				
@@ -51,12 +75,12 @@
 					<tr>
 						
 						<td>{{tsk.TaskName}}</td>
-						<td>{{tsk.TaskAssignTo}}</td>
+						<td>{{tsk.employee}}</td>
 						<td>{{tsk.Date}}</td>
 						<td>{{tsk.DueDate}}</td>
 						<td>{{tsk.SelectStatus}}</td>
-						<td><a class="btn btn btn-sm btn-info" href="{% url 'update_task' tsk.id %}">Update</a></td>
-						<td><a class="btn btn btn-sm btn-danger" href="">Delete</a></td>		
+						<td><a class="btn btn btn-sm btn-secondary" href="{% url 'update_task' tsk.id %}">Update</a></td>
+						<td><a class="btn btn btn-sm btn-danger" href="{% url 'delete_task' tsk.id %}">Delete</a></td>		
 					</tr>
 				{% endfor %}
 			</table>

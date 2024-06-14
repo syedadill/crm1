@@ -1,16 +1,28 @@
 {% extends "accounts/main.html" %}
 
 {%block content%} 
+<div class = "col-md-7">
+    <div class = " card card-body bg-secondary text-white">
+    <table>
+        <th>
+            
+            <td><a class = "btn btn-warning" href="{% url 'home' %}"> Back To Home Page</a></td>
+            <td><h3><b>Project:</b> {{projects.ProjectName}}</h3></td>
+            
+        </th>
+    </table>
+    </div>
 
+</div>
 {%  include 'accounts/status.html' %}
 <br>
 
 <div class="row">
     <div class="col-md">
         <div class="card card-body">
-            <h5>Project: {{project.ProjectName}}</h5>
+            <h5>Project: {{projects.ProjectName}}</h5>
             <hr>
-            <a class="btn btn-outline-info  btn-sm btn-block" href="">Update Project</a>
+            <a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'update_project' projects.id %}">Update Project</a>
             <a class="btn btn-outline-danger  btn-sm btn-block" href="">Delete Delete</a>
 
         </div>
@@ -38,46 +50,72 @@
 <br>
 <div class="row">
     <div class="col">
-        <div class="card card-body">
-            <form method="get">
-
-            <button class="btn btn-primary" type="submit">Search</button>
-          </form>
+        
+        <div class="col-md-2">
+            <div class="card card-body bg-white">
+                <a class="btn bg-dark text-white" href="{% url 'create_task' projects.id %}">Create Task</a>
+            </div>
         </div>
-    </div>
-    
 </div>
 <br>
+<div class= "container-fluid mt-3">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card card-body">
+                <div class="btn bg-dark text-white" >Tasks in this Project</div>
+                <table class="table table-sm">
+                    <tr>
+                        
+                        <th>Task Name</th>
+                        <th>Asigned to</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Update</th>
+                        <th>Remove</th>
+                    </tr>
+                    {% for tsk in task%}
+                    <tr>
+                        <td>{{tsk.TaskName}}</td>
+                        <td>{{tsk.employe}}</td>
+                        <td>{{tsk.DueDate}}</td>
+                        <td>{{tsk.SelectStatus}}</td>
+                        <td><a class="btn btn btn-sm btn-info" href="{% url 'update_task' tsk.id %}">Update</a></td>
+                        <td><a class="btn btn btn-sm btn-danger" href="{% url 'delete_task' tsk.id %}">Delete</a></td>	 
 
-<div class="row">
-    <div class="col-md">
-        <div class="card card-body">
-            <table class="table table-sm">
-                <tr>
-                    <th>Task Name</th>
-                    <th>Asigned to</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                    <th>Update</th>
-                    <th>Remove</th>
-                </tr>
-                {% for tsk in task%}
-                <tr>
-                    <td>{{tsk.TaskName}}</td>
-                    <td>{{tsk.TaskAssignTo}}</td>
-                    <td>{{tsk.DueDate}}</td>
-                    <td>{{tsk.SelectStatus}}</td>
-                    <td><a class="btn btn btn-sm btn-info" href="{% url 'update_task' tsk.id %}">Update</a></td>
-					<td><a class="btn btn btn-sm btn-danger" href="{% url 'delete_task' tsk.id %}">Delete</a></td>	 
+
+                    </tr>
+                    
+                    
+                    {%endfor%}
+                </table>
+            </div>
+        </div>
 
 
-                </tr>
-                
-                
-                {%endfor%}
-            </table>
+
+
+        <div class="col-md-5">
+            <div class="card card-body">
+                <a class="btn bg-dark text-white" href="">Members in project</a>
+                <table class="table table-sm">
+                    <tr> 
+                        <th>Employee Name</th>
+                        <th>Email</th>
+                    </tr>
+                    
+                    	
+                        <tr>
+                            
+                            <td>{% for tag in projects.Assign.all %}{{ tag.EmployeeName }}{% if not forloop.last %}<hr>
+                                {% endif %}{% endfor %}</td>
+                            <td>{% for tag in projects.Assign.all %}{{ tag.Email}}{% if not forloop.last %},<hr>
+                                {% endif %}{% endfor %}</td>	
+                        </tr>
+                            
+                    
+                </table>
+            </div>
         </div>
     </div>
 </div>
-
 {%endblock%}

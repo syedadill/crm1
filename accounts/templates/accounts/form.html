@@ -1,20 +1,106 @@
 {% extends 'accounts/main.html' %}
 {% load static %}
-{%block content%}
+{% block content %}
 <br>
-<div class="row">
-    <div class="col-md-6">
-        <div class="card card-body">
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0" style="text-align: center;">Create Task</h5>
+                {{ form.media }}
+            </div>
+            <div class="card-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        
+                        {{ form.TaskName.label_tag }}
+                        {{ form.TaskName }} 
+                        {{ form.DueDate.label_tag }}
+                        {{ form.DueDate }} <hr>
+                    </div>
 
-            <form action="" method="POST">
+                   
 
-                {% csrf_token %}
-                {{form}}
-                
-                <input class = "btn btn btn-sm btn-i"type="submit" name="Submit">
-            </form>
+                    <div class="form-group">
+                        {{ form.TaskType.label_tag }}
+                        {{ form.TaskType }} 
+                       
+                    </div>
+                    <br>
+                    <div class="form-group">
+                       
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.project.label_tag }}
+                       <p> {{project.name}} </p>
+
+                        {{ form.SelectStatus.label_tag }}
+                        {{ form.SelectStatus }}
+                    </div>
+                   
+                    <div class="form-group">
+                       
+                    </div>
+<br>
+                    <div class="form-group">
+                        {{ form.tags.label_tag }}
+                        {{ form.tags }}           Assign Task:  {{ form.employe }}
+
+                    </div>
+
+                    <div class="form-group">
+                      
+                    </div>
+                        <br>
+                    <div class="form-group">
+                        {{ form.Image.label_tag }}
+                        {{ form.Image }}
+
+                        {{ form.files.label_tag }}
+                        {{ form.files }}
+                    </div>
+                    
+                    <div class="form-group">
+                          {{form.Comments}}
+                    </div>
+                        <br>
+                        <b> {{ form.TaskDescription.label_tag }}<b><br>
+                        
+                            {{ form.TaskDescription }}
+                            
+                    <div class="form-group">
+                       
+                        <input class="btn btn-primary btn-block" type="submit" name="Submit" value="Submit">
+                    </div>
+                    
+                </form>
+                <script>
+                    CKEDITOR.replace('id_content', {
+                        filebrowserUploadUrl: '{% url "ckeditor_upload" %}',
+                        filebrowserBrowseUrl: '{% url "ckeditor_browse" %}',
+                        extraPlugins: 'uploadimage',
+                        height: 300,
+                        width: '100%'
+                    });
+                </script>
+                <div class="mt-3">
+                    {{ form.errors }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    // Initialize flatpickr on the DueDate field
+    flatpickr("[name='{{ form.DueDate.name }}']", {
+        dateFormat: "Y-m-d",
+    });
+</script>   
 {% endblock %}

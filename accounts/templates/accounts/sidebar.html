@@ -1,0 +1,47 @@
+{%load static%}
+
+
+  <style>
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      padding: 48px 0 0;
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+      background-color: #f8f9fa;
+    }
+    /* Sidebar icons styles */
+    .sidebar .nav-link {
+      font-size: 16px;
+    }
+    /* Main content style */
+    .main-content {
+      margin-left: 250px; /* Adjust this value based on sidebar width */
+      padding: 20px;
+    }
+  </style>
+
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Reports</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Analytics</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Settings</a>
+    </li>
+  </ul>
+</div>
+
+
+

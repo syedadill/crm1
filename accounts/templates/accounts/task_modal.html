@@ -1,0 +1,37 @@
+<!-- Modal -->
+<div class="modal fade" id="taskModal{{ task.id }}" tabindex="-1" aria-labelledby="taskModalLabel{{ task.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel{{ task.id }}">Task Details: {{ task.TaskName }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'update_task_status' task.id %}" method="POST">
+          {% csrf_token %}
+          <p><strong>Task Name:</strong> {{ task.TaskName }}</p>
+          <p><strong>Description:</strong> {{ task.TaskDescription }}</p>
+          <p><strong>Type:</strong> {{ task.TaskType }}</p>
+          <p><strong>Assigned:</strong> {{ task.employe }}</p>
+          <p><strong>Due Date:</strong> {{ task.DueDate }}</p>
+          <p><strong>Tags:</strong> {% for tag in task.tags.all %}{{ tag.Technology }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+          <p><strong>Project:</strong> {{ task.project.ProjectName }}</p>
+          <div class="form-group">
+            <label for="status{{ task.id }}">Status:</label>
+            <select class="form-control" id="status{{ task.id }}" name="SelectStatus">
+              <option value="ToDo" {% if task.SelectStatus == 'ToDo' %}selected{% endif %}>To Do</option>
+              <option value="In Progress" {% if task.SelectStatus == 'In Progress' %}selected{% endif %}>In Progress</option>
+              <option value="Testing" {% if task.SelectStatus == 'Testing' %}selected{% endif %}>Testing</option>
+              <option value="Bug" {% if task.SelectStatus == 'Bug' %}selected{% endif %}>Bug</option>
+              <option value="Completed" {% if task.SelectStatus == 'Completed' %}selected{% endif %}>Completed</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
